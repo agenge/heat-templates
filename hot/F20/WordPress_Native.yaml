@@ -26,8 +26,17 @@ parameters:
       Recommended values are fedora-20.i386 or fedora-20.x86_64;
       get them from http://cloud.fedoraproject.org/fedora-20.i386.qcow2
       or http://cloud.fedoraproject.org/fedora-20.x86_64.qcow2 .
-    default: fedora-20.x86_64
-
+    default: centos-63.x86_64-cloud
+  public_net_id:
+    type: string
+    description: >
+      ID of public network for which floating IP addresses will be allocated
+  private_net_id:
+    type: string
+    description: ID of private network into which servers get deployed
+  private_subnet_id:
+    type: string
+    description: ID of private sub network into which servers get deployed
   db_name:
     type: string
     description: WordPress database name
@@ -111,6 +120,22 @@ resources:
             db_name: { get_param: db_name }
             db_user: { get_param: db_username }
             db_password: { get_param: db_password }
+      networks:
+        - port: { get_resource: wordpress_instance_port }
+
+  wordpress_instance_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_net_id }
+      fixed_ips:
+        - subnet_id: { get_param: private_subnet_id }
+
+  wordpress_instance_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: wordpress_instance_port }
+
 
 outputs:
   WebsiteURL:
