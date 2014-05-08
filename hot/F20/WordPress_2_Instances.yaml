@@ -119,14 +119,12 @@ resources:
             db_password: { get_param: db_password }
       networks:
         - port: { get_resource: DatabaseServer_port }
-
   DatabaseServer_port:
     type:	OS::Neutron::Port
     properties:
       network_id: { get_param: private_net_id }
       fixed_ips:
         - subnet_id: { get_param: private_subnet_id }		
-
   WebServer:
     type: OS::Nova::Server
     properties:
@@ -154,10 +152,9 @@ resources:
             db_name: { get_param: db_name }
             db_user: { get_param: db_username }
             db_password: { get_param: db_password }
-            db_ipaddr: { get_attr: [ DatabaseServer, networks ] }
+            db_ipaddr: { get_attr: [DatabaseServer, networks, port, 0] }
       networks:
         - port: { get_resource: WebServer_port }
-  
   WebServer_port:
     type: OS::Neutron::Port
     properties:
