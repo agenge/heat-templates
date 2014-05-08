@@ -154,7 +154,7 @@ resources:
             db_name: { get_param: db_name }
             db_user: { get_param: db_username }
             db_password: { get_param: db_password }
-            db_ipaddr: { get_attr: [ DatabaseServer, first_address ] }
+            db_ipaddr: { get_attr: [ DatabaseServer, networks ] }
       networks:
         - port: { get_resource: WebServer_port }
   
