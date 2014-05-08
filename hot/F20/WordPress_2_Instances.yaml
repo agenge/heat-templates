@@ -88,7 +88,6 @@ parameters:
       - allowed_pattern: '[a-zA-Z0-9]*'
         description: db_root_password must contain only alphanumeric characters
 
-
 resources:
   DatabaseServer:
     type: OS::Nova::Server
@@ -153,7 +152,7 @@ resources:
             db_name: { get_param: db_name }
             db_user: { get_param: db_username }
             db_password: { get_param: db_password }
-            db_ipaddr: { get_attr: [DatabaseServer, networks, port, 0] }
+            db_ipaddr: { get_attr: [DatabaseServer, networks, private, 0] }
       networks:
         - port: { get_resource: WebServer_port }
   WebServer_port:
