@@ -94,16 +94,15 @@ resources:
             #!/bin/bash -v
 
             yum -y install mysql mysql-server httpd wordpress
-            mkdir -p /var/log/mysql
-            touch /var/log/mysql/mysql.log
-            chown mysql.mysql /var/log/mysql/mysql.log
-            service mysql start
+            service mysqld start
+            
 
             # Setup MySQL root password and create a user
             mysqladmin -u root password db_rootpassword
             cat << EOF | mysql -u root --password=db_rootpassword
             CREATE DATABASE db_name;
             GRANT ALL PRIVILEGES ON db_name.* TO "db_user"@"localhost"
+            GRANT ALL PRIVILEGES ON db_name.* TO "db_user"@"127.0.0.1"
             IDENTIFIED BY "db_password";
             FLUSH PRIVILEGES;
             EXIT
@@ -116,7 +115,7 @@ resources:
             sed -i s/username_here/db_user/ /etc/wordpress/wp-config.php
             sed -i s/password_here/db_password/ /etc/wordpress/wp-config.php
 
-            systemctl start httpd.service
+            service httpd start
           params:
             db_rootpassword: { get_param: db_root_password }
             db_name: { get_param: db_name }
