@@ -120,12 +120,13 @@ resources:
       networks:
         - port: { get_resource: DatabaseServer_port }
   DatabaseServer_port:
-    type:	OS::Neutron::Port
+    type: OS::Neutron::Port
     properties:
       network_id: { get_param: private_net_id }
       fixed_ips:
-        - subnet_id: { get_param: private_subnet_id }		
-  WebServer:
+        - subnet_id: { get_param: private_subnet_id }
+
+    WebServer:
     type: OS::Nova::Server
     properties:
       image: { get_param: image_id }
