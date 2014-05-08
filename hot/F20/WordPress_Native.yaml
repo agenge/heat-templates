@@ -26,7 +26,7 @@ parameters:
       Recommended values are fedora-20.i386 or fedora-20.x86_64;
       get them from http://cloud.fedoraproject.org/fedora-20.i386.qcow2
       or http://cloud.fedoraproject.org/fedora-20.x86_64.qcow2 .
-    default: centos-63.x86_64-cloud
+    default: Centos-64.x86_64-cloud-heat
   public_net_id:
     type: string
     description: >
@@ -93,10 +93,11 @@ resources:
           template: |
             #!/bin/bash -v
 
-            yum -y install mariadb mariadb-server httpd wordpress
-            touch /var/log/mariadb/mariadb.log
-            chown mysql.mysql /var/log/mariadb/mariadb.log
-            systemctl start mariadb.service
+            yum -y install mysql mysql-server httpd wordpress
+            mkdir -p /var/log/mysql
+            touch /var/log/mysql/mysql.log
+            chown mysql.mysql /var/log/mysql/mysql.log
+            service mysql start
 
             # Setup MySQL root password and create a user
             mysqladmin -u root password db_rootpassword
@@ -109,6 +110,7 @@ resources:
             EOF
 
             sed -i "/Deny from All/d" /etc/httpd/conf.d/wordpress.conf
+            sed -i "/Allow from All/d" /etc/httpd/conf.d/wordpress.conf
             sed -i "s/Require local/Require all granted/" /etc/httpd/conf.d/wordpress.conf
             sed -i s/database_name_here/db_name/ /etc/wordpress/wp-config.php
             sed -i s/username_here/db_user/ /etc/wordpress/wp-config.php
