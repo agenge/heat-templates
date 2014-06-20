@@ -25,7 +25,7 @@ parameters:
       Recommended values are fedora-20.i386 or fedora-20.x86_64;
       get them from http://cloud.fedoraproject.org/fedora-20.i386.qcow2
       or http://cloud.fedoraproject.org/fedora-20.x86_64.qcow2 .
-    default: Centos-64.x86_64-cloud-heat
+    default: centos65.x86_64_cloud
   public_net_id:
     type: string
     description: >
@@ -91,7 +91,8 @@ resources:
         str_replace:
           template: |
             #!/bin/bash -v
-
+            
+            sudo su -
             yum -y install mysql mysql-server httpd wordpress
             service mysqld start
             
