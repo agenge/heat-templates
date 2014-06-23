@@ -92,7 +92,6 @@ resources:
           template: |
             #!/bin/bash -v
             
-            sudo su -
             yum -y install mysql mysql-server httpd wordpress
             service mysqld start
             
