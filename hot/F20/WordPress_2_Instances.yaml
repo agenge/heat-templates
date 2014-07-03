@@ -139,7 +139,6 @@ resources:
             yum -y install httpd wordpress
 
             sed -i "/Deny from All/d" /etc/httpd/conf.d/wordpress.conf
-            sed -i "/Allow from All/d" /etc/httpd/conf.d/wordpress.conf
             sed -i "s/Require local/Require all granted/" /etc/httpd/conf.d/wordpress.conf
             sed -i s/database_name_here/db_name/ /etc/wordpress/wp-config.php
             sed -i s/username_here/db_user/      /etc/wordpress/wp-config.php
@@ -160,7 +159,7 @@ resources:
     properties:
       network_id: { get_param: private_net_id }
       fixed_ips:
-        - subnet_id: { get_param: private_subnet_id }	
+        - subnet_id: { get_param: private_subnet_id }
   WebServer_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
